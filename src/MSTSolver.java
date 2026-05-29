@@ -91,7 +91,44 @@ public class MSTSolver {
     }
 
     public List<MSTEdge> prim(Graph graph, int startVertex) {
-        // Por implementar en la siguiente fase
-        return new ArrayList<>();
+        List<MSTEdge> mst = new ArrayList<>();
+        int vertices = graph.getVertexCount();
+        int[][] matrix = graph.getAdjacencyMatrix();
+        boolean[] visited = new boolean[vertices];
+        // "->" significa "de" y "<-" significa "a" en el contexto de la arista
+        PriorityQueue<MSTEdge> queue = new PriorityQueue<>((a, b) -> Integer.compare(a.weight, b.weight));
+
+        // Marcar el vértice inicial como visitado.
+        visited[startVertex] = true;
+
+        // Agregar a la cola todas las aristas que salen del vértice inicial.
+        for (int neighbor = 0; neighbor < vertices; neighbor++) {
+            if (matrix[startVertex][neighbor] > 0) {
+                queue.add(new MSTEdge(startVertex, neighbor, matrix[startVertex][neighbor]));
+            }
+        }
+
+        // Tomar siempre la arista de menor peso que conecte con un vértice no visitado.
+        while (!queue.isEmpty() && mst.size() < vertices - 1) {
+            MSTEdge edge = queue.poll();
+
+            // Si el destino ya fue visitado, esta arista no sirve para el MST.
+            if (visited[edge.to]) {
+                continue;
+            }
+
+            // Marcar el nuevo vértice, guardar la arista y expandir sus vecinos.
+            visited[edge.to] = true;
+            mst.add(edge);
+
+            // Insertar en la cola las aristas que salgan del nuevo vértice.
+            for (int neighbor = 0; neighbor < vertices; neighbor++) {
+                if (matrix[edge.to][neighbor] > 0 && !visited[neighbor]) {
+                    queue.add(new MSTEdge(edge.to, neighbor, matrix[edge.to][neighbor]));
+                }
+            }
+        }
+
+        return mst;
     }
 }
