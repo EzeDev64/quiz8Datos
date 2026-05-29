@@ -1,4 +1,4 @@
-# quiz8Datos
+# quiz9Datos
 
 Este documento contiene el funcionamiento de los algoritmos implementadas y como ejecutarlos usando grafos de prueba.
 
